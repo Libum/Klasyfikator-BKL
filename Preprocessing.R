@@ -23,11 +23,6 @@ Corpus_sko2015 = tm_map(Corpus_sko2015, content_transformer(tolower))
 Corpus_uza2014 = tm_map(Corpus_uza2014, content_transformer(tolower))
 Corpus_uza2015 = tm_map(Corpus_uza2015, content_transformer(tolower))
 
-Corpus_sko2014 = tm_map(Corpus_sko2014, stripWhitespace)
-Corpus_sko2015 = tm_map(Corpus_sko2015, stripWhitespace)
-Corpus_uza2014 = tm_map(Corpus_uza2014, stripWhitespace)
-Corpus_uza2015 = tm_map(Corpus_uza2015, stripWhitespace)
-
 Corpus_sko2014 = tm_map(Corpus_sko2014, removePunctuation)
 Corpus_sko2015 = tm_map(Corpus_sko2015, removePunctuation)
 Corpus_uza2014 = tm_map(Corpus_uza2014, removePunctuation)
@@ -37,6 +32,11 @@ Corpus_sko2014 = tm_map(Corpus_sko2014, removeWords, stopwords)
 Corpus_sko2015 = tm_map(Corpus_sko2015, removeWords, stopwords)
 Corpus_uza2014 = tm_map(Corpus_uza2014, removeWords, stopwords)
 Corpus_uza2015 = tm_map(Corpus_uza2015, removeWords, stopwords)
+
+Corpus_sko2014 = tm_map(Corpus_sko2014, stripWhitespace)
+Corpus_sko2015 = tm_map(Corpus_sko2015, stripWhitespace)
+Corpus_uza2014 = tm_map(Corpus_uza2014, stripWhitespace)
+Corpus_uza2015 = tm_map(Corpus_uza2015, stripWhitespace)
 
 #Lematyzacja (funkcja lemmatize) na korpusie stworzonym w tm, jako output daje wektor ze zlematyzowanymi zdaniami
 # UWAGA gubi puste wektory
@@ -58,14 +58,18 @@ extract_text = function(corpus){
 
 insert_lemats = function(sentence){
         final_sentence = character()
-        sentence = strsplit(x = sentence, split = " ") #tu jest problem
+        sentence = strsplit(x = sentence, split = " ")
         for(word in sentence[[1]]){
                 lemat = as.character(lematy[word])
                 test = as.vector(is.na(lemat))
                 if(test == TRUE){final_sentence = paste(final_sentence, word)}
                 else{final_sentence = paste(final_sentence, lemat)}
         }
-        substr(x = final_sentence, start = 2, stop = nchar(final_sentence))
+        result = substr(x = final_sentence, start = 2, stop = nchar(final_sentence))
+        if (length(result)==0){
+                result = ""
+        }
+        result
 }
 
 
