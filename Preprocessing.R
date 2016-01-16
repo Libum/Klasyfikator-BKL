@@ -28,6 +28,11 @@ Corpus_sko2015 = tm_map(Corpus_sko2015, removePunctuation)
 Corpus_uza2014 = tm_map(Corpus_uza2014, removePunctuation)
 Corpus_uza2015 = tm_map(Corpus_uza2015, removePunctuation)
 
+Corpus_sko2014 = tm_map(Corpus_sko2014, removePunctuation)
+Corpus_sko2015 = tm_map(Corpus_sko2015, removePunctuation)
+Corpus_uza2014 = tm_map(Corpus_uza2014, removePunctuation)
+Corpus_uza2015 = tm_map(Corpus_uza2015, removePunctuation)
+
 Corpus_sko2014 = tm_map(Corpus_sko2014, removeWords, stopwords)
 Corpus_sko2015 = tm_map(Corpus_sko2015, removeWords, stopwords)
 Corpus_uza2014 = tm_map(Corpus_uza2014, removeWords, stopwords)
