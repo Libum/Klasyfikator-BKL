@@ -1,0 +1,14 @@
+# RStudio files
+*.Rproj.user/
+# History files
+*.Rhistory
+*.Rapp.history
+
+# Session Data files
+*.RData
+
+#Databases
+*.xlsx
+*.csv
+*.txt
+*.tab
