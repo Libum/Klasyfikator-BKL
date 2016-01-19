@@ -4,13 +4,14 @@ stopwords = readLines("Polish_stopwords.txt")
 stopwords = tolower(stopwords)
 
 library(data.table)
-slownik = fread(input = "polimorf-20151020.tab", select = c(1,2), encoding = "UTF-8")
+slownik = fread(input = "polimorf-20151020.tab", select = c(1,2), encoding = "UTF-8", stringsAsFactors = FALSE)
 colnames(slownik) = c("indeks","lemat")
-lematy = slownik$lemat
-names(lematy) = slownik$indeks
+lematy = hash(slownik$indeks, slownik$lemat)
+rm(slownik)
 
 wulgaryzmy = read.csv(file = "Wulgaryzmy_1by1row.csv", stringsAsFactors = FALSE, header = FALSE)
 names(wulgaryzmy) = "slowo"
+wulgaryzmy = as.vector(wulgaryzmy)
  
 #Przygotowanie danych tekstowych do analizy
 
@@ -68,8 +69,8 @@ insert_lemats = function(sentence){
         final_sentence = character()
         sentence = strsplit(x = sentence, split = " ")
         for(word in sentence[[1]]){
-                lemat = as.character(lematy[word])
-                test = as.vector(is.na(lemat))
+                lemat = lematy[[word]]
+                test = as.vector(is.null(lemat))
                 if(test == TRUE){final_sentence = paste(final_sentence, word)}
                 else{final_sentence = paste(final_sentence, lemat)}
         }
