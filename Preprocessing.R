@@ -8,6 +8,9 @@ slownik = fread(input = "polimorf-20151020.tab", select = c(1,2), encoding = "UT
 colnames(slownik) = c("indeks","lemat")
 lematy = slownik$lemat
 names(lematy) = slownik$indeks
+
+wulgaryzmy = read.csv(file = "Wulgaryzmy_1by1row.csv", stringsAsFactors = FALSE, header = FALSE)
+names(wulgaryzmy) = "slowo"
  
 #Przygotowanie danych tekstowych do analizy
 
@@ -44,7 +47,7 @@ Corpus_uza2014 = tm_map(Corpus_uza2014, stripWhitespace)
 Corpus_uza2015 = tm_map(Corpus_uza2015, stripWhitespace)
 
 #Lematyzacja (funkcja lemmatize) na korpusie stworzonym w tm, jako output daje wektor ze zlematyzowanymi zdaniami
-# UWAGA gubi puste wektory
+
 
 extract_text = function(corpus){
         text = as.vector(sapply(corpus, as.character)) #Wyciąga teksty z corpusu
@@ -52,7 +55,7 @@ extract_text = function(corpus){
         for (i in text){
                 test = grepl(x = i, pattern = "^ ") #Usuwa zbędne spacje na początku zdań
                 if (test==TRUE){
-                      final = cbind(final, substr(x = i, start = 2, stop = nchar(i)))  
+                      final = cbind(final, substr(x = i, start = 2, stop = nchar(i)))
                 }
                 else {
                         final = cbind(final, i)
@@ -80,12 +83,12 @@ insert_lemats = function(sentence){
 
 lemmatize = function(corpus){
         text = extract_text(corpus)
-        names(text) = seq(1, length(text), by = 1)
-        result = vector()
-        for (name in names(text)) {                 
-                sentence = text[[name]]
+        index = seq(1, length(text), by = 1)
+        result = vector(mode = "list", length = max(index))
+        for (i in index) { 
+                sentence = text[[i]]
                 final_sentence = insert_lemats(sentence)
-                result = c(result, final_sentence)
+                result[i] = final_sentence
         }
         result
 }
@@ -95,7 +98,7 @@ lemmatize = function(corpus){
 library(RWeka)
 options(mc.cores=1)
 BigramTokenizer = function(x) {NGramTokenizer(x, Weka_control(min = 2, max = 2))}
-DTM_uza2014 = DocumentTermMatrix(Corpus_uza2014, control = list(tokenize = BigramTokenizer))
+DTM_uza2014 = DocumentTermMatrix(Corpus_uza2014, control = list(tokenize = BigramTokenizer)) #przykład zastosowania
 DTM_uza2014 = removeSparseTerms(DTM_uza2014, sparse = 0.99)
 
 
