@@ -1,11 +1,13 @@
 #Wczytanie słowników do preprocessingu
 
+library(data.table)
+library(hash)
+library(stringi)
+
 stopwords = readLines("Polish_stopwords.txt", encoding = "UTF-8")
 stopwords = tolower(stopwords)
 stopwords = stri_trans_general(stopwords, "latin-ascii")
 
-library(data.table)
-library(hash)
 slownik = fread(input = "polimorf-20151020.tab", select = c(1,2), encoding = "UTF-8", stringsAsFactors = FALSE)
 colnames(slownik) = c("indeks","lemat")
 slownik$indeks = stri_trans_general(slownik$indeks, "latin-ascii")
