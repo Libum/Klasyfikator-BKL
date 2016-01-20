@@ -57,7 +57,10 @@ Corpus_sko2015 = tm_map(Corpus_sko2015, stripWhitespace)
 Corpus_uza2014 = tm_map(Corpus_uza2014, stripWhitespace)
 Corpus_uza2015 = tm_map(Corpus_uza2015, stripWhitespace)
 
-#Lematyzacja (funkcja lemmatize) na korpusie stworzonym w tm, jako output daje wektor ze zlematyzowanymi zdaniami
+#Lematyzacja (funkcja lemmatize) na korpusie stworzonym w tm, jako output daje ramkę danych z dwoma zmiennymi:
+#' Lematy - zlematyzowane zdania (wektor tekstowy)
+#' Flaga - wektor logiczny, okreslający, czy w danym zdaniu znalazły się słowa, które nie istniały w słowniku 
+#' lematyzacyjnym (Morfologik).
 
 
 extract_text = function(corpus){
@@ -78,17 +81,23 @@ extract_text = function(corpus){
 insert_lemats = function(sentence){
         final_sentence = character()
         sentence = strsplit(x = sentence, split = " ")
+        flag = FALSE
         for(word in sentence[[1]]){
                 lemat = lematy[[word]]
                 test = as.vector(is.null(lemat))
-                if(test == TRUE){final_sentence = paste(final_sentence, word)}
-                else{final_sentence = paste(final_sentence, lemat)}
+                if(test == TRUE){
+                        final_sentence = paste(final_sentence, word)
+                        flag = TRUE
+                        }
+                else{
+                        final_sentence = paste(final_sentence, lemat)
+                        }
         }
         result = substr(x = final_sentence, start = 2, stop = nchar(final_sentence))
         if (length(result)==0){
                 result = ""
         }
-        result
+        return(c(result,flag))
 }
 
 
@@ -96,25 +105,42 @@ lemmatize = function(corpus){
         text = extract_text(corpus)
         index = seq(1, length(text), by = 1)
         result = vector(length = max(index))
+        flags = vector(length = max(index))
         for (i in index) { 
                 sentence = text[[i]]
-                final_sentence = insert_lemats(sentence)
-                result[i] = final_sentence
+                final = insert_lemats(sentence)
+                result[i] = final[1]
+                flags[i] = final[2]
         }
-        result
+        result = data.frame(Lematy = result, Flaga = flags)
 }
 
-#Zapisywanie zlematyzowanych zdan do bazy danych
+#Zapisywanie zlematyzowanych zdan oraz flag do bazy danych
 
-sko2014$Lematy = lemmatize(Corpus_sko2014)
-sko2015$Lematy = lemmatize(Corpus_sko2015)
-uza2014$Lematy = lemmatize(Corpus_uza2014)
-uza2015$Lematy = lemmatize(Corpus_uza2015)
+sko2014_lematyzacja = lemmatize(Corpus_sko2014)
+sko2015_lematyzacja = lemmatize(Corpus_sko2015)
+uza2014_lematyzacja = lemmatize(Corpus_uza2014)
+uza2015_lematyzacja = lemmatize(Corpus_uza2015)
+
+sko2014$Lematy = sko2014_lematyzacja$Lematy
+sko2015$Lematy = sko2015_lematyzacja$Lematy
+uza2014$Lematy = uza2014_lematyzacja$Lematy
+uza2015$Lematy = uza2015_lematyzacja$Lematy
+
+sko2014$Flaga = sko2014_lematyzacja$Flaga
+sko2015$Flaga = sko2015_lematyzacja$Flaga
+uza2014$Flaga = uza2014_lematyzacja$Flaga
+uza2015$Flaga = uza2015_lematyzacja$Flaga
 
 save(sko2014, file = "./Bazy_danych/sko2014.Rda")
 save(sko2015, file = "./Bazy_danych/sko2015.Rda")
 save(uza2014, file = "./Bazy_danych/uza2014.Rda")
 save(uza2015, file = "./Bazy_danych/uza2015.Rda")
+
+rm(sko2014_lematyzacja)
+rm(sko2015_lematyzacja)
+rm(uza2014_lematyzacja)
+rm(uza2015_lematyzacja)
 
 #Tworzenie bi-gramów
 
