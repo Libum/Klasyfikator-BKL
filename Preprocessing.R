@@ -1,17 +1,21 @@
 #Wczytanie słowników do preprocessingu
 
-stopwords = readLines("Polish_stopwords.txt")
+stopwords = readLines("Polish_stopwords.txt", encoding = "UTF-8")
 stopwords = tolower(stopwords)
+stopwords = stri_trans_general(stopwords, "latin-ascii")
 
 library(data.table)
+library(hash)
 slownik = fread(input = "polimorf-20151020.tab", select = c(1,2), encoding = "UTF-8", stringsAsFactors = FALSE)
 colnames(slownik) = c("indeks","lemat")
+slownik$indeks = stri_trans_general(slownik$indeks, "latin-ascii")
 lematy = hash(slownik$indeks, slownik$lemat)
 rm(slownik)
 
-wulgaryzmy = read.csv(file = "Wulgaryzmy_1by1row.csv", stringsAsFactors = FALSE, header = FALSE)
+wulgaryzmy = read.csv(file = "Wulgaryzmy_1by1row.csv", stringsAsFactors = FALSE, header = FALSE, encoding = "UTF-8")
 names(wulgaryzmy) = "slowo"
 wulgaryzmy = as.vector(wulgaryzmy)
+wulgaryzmy = stri_trans_general(wulgaryzmy, "latin-ascii")
  
 #Przygotowanie danych tekstowych do analizy
 
@@ -36,6 +40,11 @@ Corpus_sko2014 = tm_map(Corpus_sko2014, removePunctuation)
 Corpus_sko2015 = tm_map(Corpus_sko2015, removePunctuation)
 Corpus_uza2014 = tm_map(Corpus_uza2014, removePunctuation)
 Corpus_uza2015 = tm_map(Corpus_uza2015, removePunctuation)
+
+Corpus_sko2014 = tm_map(Corpus_sko2014, content_transformer(stri_trans_general), "latin-ascii")
+Corpus_sko2015 = tm_map(Corpus_sko2015, content_transformer(stri_trans_general), "latin-ascii")
+Corpus_uza2014 = tm_map(Corpus_uza2014, content_transformer(stri_trans_general), "latin-ascii")
+Corpus_uza2015 = tm_map(Corpus_uza2015, content_transformer(stri_trans_general), "latin-ascii")
 
 Corpus_sko2014 = tm_map(Corpus_sko2014, removeWords, stopwords)
 Corpus_sko2015 = tm_map(Corpus_sko2015, removeWords, stopwords)
