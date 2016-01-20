@@ -12,10 +12,11 @@ slownik$indeks = stri_trans_general(slownik$indeks, "latin-ascii")
 lematy = hash(slownik$indeks, slownik$lemat)
 rm(slownik)
 
-wulgaryzmy = read.csv(file = "Wulgaryzmy_1by1row.csv", stringsAsFactors = FALSE, header = FALSE, encoding = "UTF-8")
-names(wulgaryzmy) = "slowo"
-wulgaryzmy = as.vector(wulgaryzmy)
+wulgaryzmy = read.csv(file = "Wulgaryzmy_1by1row.csv", stringsAsFactors = FALSE, header = FALSE)
+colnames(wulgaryzmy) = "slowo"
+wulgaryzmy = wulgaryzmy$slowo
 wulgaryzmy = stri_trans_general(wulgaryzmy, "latin-ascii")
+
  
 #Przygotowanie danych tekstowych do analizy
 
