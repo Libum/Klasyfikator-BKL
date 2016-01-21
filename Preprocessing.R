@@ -1,11 +1,13 @@
 #Wczytanie słowników do preprocessingu
 
+library(stringi)
+library(data.table)
+library(hash)
+
 stopwords = readLines("Polish_stopwords.txt", encoding = "UTF-8")
 stopwords = tolower(stopwords)
 stopwords = stri_trans_general(stopwords, "latin-ascii")
 
-library(data.table)
-library(hash)
 slownik = fread(input = "polimorf-20151020.tab", select = c(1,2), encoding = "UTF-8", stringsAsFactors = FALSE, skip = 41)
 colnames(slownik) = c("indeks","lemat")
 slownik$indeks = stri_trans_general(slownik$indeks, "latin-ascii")
@@ -112,7 +114,8 @@ lemmatize = function(corpus){
                 result[i] = final[1]
                 flags[i] = final[2]
         }
-        result = data.frame(Lematy = result, Flaga = flags)
+        df = data.frame(Lematy = result, Flaga = as.logical(flags))
+        return(df)
 }
 
 #Zapisywanie zlematyzowanych zdan oraz flag do bazy danych
