@@ -18,7 +18,7 @@ wulgaryzmy = read.csv(file = "Wulgaryzmy_1by1row.csv", stringsAsFactors = FALSE,
 colnames(wulgaryzmy) = "slowo"
 wulgaryzmy = wulgaryzmy$slowo
 wulgaryzmy = stri_trans_general(wulgaryzmy, "latin-ascii")
-
+names(wulgaryzmy) = wulgaryzmy
  
 #Przygotowanie danych tekstowych do analizy
 
@@ -129,6 +129,11 @@ sko2014$Lematy = sko2014_lematyzacja$Lematy
 sko2015$Lematy = sko2015_lematyzacja$Lematy
 uza2014$Lematy = uza2014_lematyzacja$Lematy
 uza2015$Lematy = uza2015_lematyzacja$Lematy
+
+sko2014$Lematy = as.character(sko2014$Lematy)
+sko2015$Lematy = as.character(sko2015$Lematy)
+uza2014$Lematy = as.character(uza2014$Lematy)
+uza2015$Lematy = as.character(uza2015$Lematy)
 
 sko2014$Flaga = sko2014_lematyzacja$Flaga
 sko2015$Flaga = sko2015_lematyzacja$Flaga
