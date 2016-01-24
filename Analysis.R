@@ -1,9 +1,9 @@
 #Zliczanie ilości znaków w zdaniach bazowych + przypisanie tych zliczen do bazy danych
 
-sko2014$Liczba_znakow = as.numeric(sapply(sko2014$Skojarzenie, nchar))
-sko2015$Liczba_znakow = as.numeric(sapply(sko2015$skojarzenie, nchar))
-uza2014$Liczba_znakow = as.numeric(sapply(uza2014$Uzasadnienie, nchar))
-uza2015$Liczba_znakow = as.numeric(sapply(uza2015$uzasadnienie, nchar))
+sko2014$Liczba_znakow = as.numeric(sapply(sko2014$Lematy, nchar))
+sko2015$Liczba_znakow = as.numeric(sapply(sko2015$Lematy, nchar))
+uza2014$Liczba_znakow = as.numeric(sapply(uza2014$Lematy, nchar))
+uza2015$Liczba_znakow = as.numeric(sapply(uza2015$Lematy, nchar))
 
 #Funkcja identify_long, identyfikująca n-długie ciągi znaków bez spacji (jako output daje wektor logiczny)
 #Domyślnie jako n przyjmuje 0 - czyli kwalifikuje wszystkie zdania, w których nie ma spacji
