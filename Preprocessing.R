@@ -1,6 +1,7 @@
 #Wczytanie słowników do preprocessingu
 
 library(stringi)
+library(stringr)
 library(data.table)
 library(hash)
 
@@ -8,10 +9,11 @@ stopwords = readLines("Polish_stopwords.txt", encoding = "UTF-8")
 stopwords = tolower(stopwords)
 stopwords = stri_trans_general(stopwords, "latin-ascii")
 
-slownik = fread(input = "polimorf-20151020.tab", select = c(1,2), encoding = "UTF-8", stringsAsFactors = FALSE, skip = 41)
-colnames(slownik) = c("indeks","lemat")
+slownik = fread(input = "polimorf-20151020.tab", select = c(1,2,3), encoding = "UTF-8", stringsAsFactors = FALSE, skip = 41)
+colnames(slownik) = c("indeks","lemat","tag")
 slownik$indeks = stri_trans_general(slownik$indeks, "latin-ascii")
 lematy = hash(slownik$indeks, slownik$lemat)
+tagi = hash(slownik$indeks, slownik$tag)
 rm(slownik)
 
 wulgaryzmy = read.csv(file = "Wulgaryzmy_1by1row.csv", stringsAsFactors = FALSE, header = FALSE)
@@ -118,7 +120,34 @@ lemmatize = function(corpus){
         return(df)
 }
 
-#Zapisywanie zlematyzowanych zdan oraz flag do bazy danych
+#Funkcja insert_tags jako input przyjmuje zdanie (wektor tekstowy), a jako output daje wektor tekstowy z tagami 
+#gramatycznymi odpowiadającymi poszczególnym słowom. Słowa niemożliwe do otagowania zostają pominięte. W przypadku
+#tagowania w preprocessingu pominięto etap usuwania stopwords, gdyż mogą się one okazać przydatne.
+
+insert_tags = function(sentence){
+        tags = character()
+        sentence = strsplit(x = sentence, split = " ")
+        for (word in sentence[[1]]){
+                tag = tagi[[word]]
+                test = as.vector(is.null(tag))
+                if (test == FALSE){
+                        end = regexpr(pattern = ":", text =  tag)[1]
+                        if (end == -1){
+                                tags = paste(tags, tag)
+                        } else {
+                        tag = substr(x = tag, start = 1, stop = end-1)
+                        tags = paste(tags, tag)
+                        }
+                }
+        }
+        result = substr(x = tags, start = 2, stop = nchar(tags))
+        if (length(result)==0){
+                result = ""
+        }
+        result
+}
+
+#Zapisywanie zlematyzowanych zdan, tagów oraz flag do bazy danych
 
 sko2014_lematyzacja = lemmatize(Corpus_sko2014)
 sko2015_lematyzacja = lemmatize(Corpus_sko2015)
@@ -139,6 +168,11 @@ sko2014$Flaga = sko2014_lematyzacja$Flaga
 sko2015$Flaga = sko2015_lematyzacja$Flaga
 uza2014$Flaga = uza2014_lematyzacja$Flaga
 uza2015$Flaga = uza2015_lematyzacja$Flaga
+
+sko2014$Tagi = sapply(X = extract_text(Corpus_sko2014), FUN = insert_tags)
+sko2015$Tagi = sapply(X = extract_text(Corpus_sko2015), FUN = insert_tags)
+uza2014$Tagi = sapply(X = extract_text(Corpus_uza2014), FUN = insert_tags)
+uza2015$Tagi = sapply(X = extract_text(Corpus_uza2015), FUN = insert_tags)
 
 save(sko2014, file = "./Bazy_danych/sko2014.Rda")
 save(sko2015, file = "./Bazy_danych/sko2015.Rda")
