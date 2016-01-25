@@ -186,11 +186,11 @@ rm(uza2015_lematyzacja)
 
 #Tworzenie bi-gramów
 
-library(RWeka)
-options(mc.cores=1)
-BigramTokenizer = function(x) {NGramTokenizer(x, Weka_control(min = 2, max = 2))}
-DTM_uza2014 = DocumentTermMatrix(Corpus_uza2014, control = list(tokenize = BigramTokenizer)) #przykład zastosowania
-DTM_uza2014 = removeSparseTerms(DTM_uza2014, sparse = 0.99)
+#library(RWeka)
+#options(mc.cores=1)
+#BigramTokenizer = function(x) {NGramTokenizer(x, Weka_control(min = 2, max = 2))}
+#DTM_uza2014 = DocumentTermMatrix(Corpus_uza2014, control = list(tokenize = BigramTokenizer)) #przykład zastosowania
+#DTM_uza2014 = removeSparseTerms(DTM_uza2014, sparse = 0.99)
 
 
 
