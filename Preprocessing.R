@@ -192,5 +192,6 @@ rm(uza2015_lematyzacja)
 #DTM_uza2014 = DocumentTermMatrix(Corpus_uza2014, control = list(tokenize = BigramTokenizer)) #przykład zastosowania
 #DTM_uza2014 = removeSparseTerms(DTM_uza2014, sparse = 0.99)
 
+#Uwagi ogólne - można uprościć ten kod poprzez wektoryzację (funcja Vectorize), póki co jest jednak wystarczająco czytelny
 
 
