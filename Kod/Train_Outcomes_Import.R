@@ -45,7 +45,17 @@ colnames(Final_uza2015) = "zdanie"
 
 #Preprocessing surowych danych
 
-sko2014_raw = Preprocess(sko)
+sko2014_raw = Preprocess(sko2014$Skojarzenie)
+sko2015_raw = Preprocess(sko2015$skojarzenie)
+uza2014_raw = Preprocess(uza2014$Uzasadnienie)
+uza2015_raw = Preprocess(uza2015$uzasadnienie)
+
+#Preprocessing danych wynikowych - zaklasyfikowanych zdań
+
+Final_sko2015$zdanie = Preprocess(Final_sko2015$zdanie)
+Final_uza2015$zdanie = Preprocess(Final_uza2015$zdanie)
+Final_uza2014$zdanie = Preprocess(Final_uza2014$zdanie)
+Final_sko2014$zdanie = Preprocess(Final_sko2014$zdanie)
 
 #Usuwanie nazw kategorii - czy to ma sens?
 #Final_sko2015$Kategoria = grepl(pattern = "^[A-Z]", x = Final_sko2015$zdanie)
@@ -75,9 +85,9 @@ check_outcome = function(sentence, outcomes){
 }
 
 #Dodanie zmiennych wynikowych do baz danych
-sko2015$Wynik = as.logical(sapply(X = sko2015$skojarzenie, FUN = check_outcome, outcomes = outcomes_sko2015))
-sko2014$Wynik = as.logical(sapply(X = sko2014$Skojarzenie, FUN = check_outcome, outcomes = outcomes_sko2014))
-uza2014$Wynik = as.logical(sapply(X = uza2014$Uzasadnienie, FUN = check_outcome, outcomes = outcomes_uza2014))
-uza2015$Wynik = as.logical(sapply(X = uza2015$uzasadnienie, FUN = check_outcome, outcomes = outcomes_uza2015))
+sko2015$Wynik = as.logical(sapply(X = sko2015_raw, FUN = check_outcome, outcomes = outcomes_sko2015))
+sko2014$Wynik = as.logical(sapply(X = sko2014_raw, FUN = check_outcome, outcomes = outcomes_sko2014))
+uza2014$Wynik = as.logical(sapply(X = uza2014_raw, FUN = check_outcome, outcomes = outcomes_uza2014))
+uza2015$Wynik = as.logical(sapply(X = uza2015_raw, FUN = check_outcome, outcomes = outcomes_uza2015))
 
 
