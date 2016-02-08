@@ -41,15 +41,15 @@ Corpus_sko2015 = tm_map(Corpus_sko2015, removeNumbers)
 Corpus_uza2014 = tm_map(Corpus_uza2014, removeNumbers)
 Corpus_uza2015 = tm_map(Corpus_uza2015, removeNumbers)
 
-Corpus_sko2014 = tm_map(Corpus_sko2014, content_transformer(gsub), pattern = "[[:punct:]]", replacement = " ")
-Corpus_sko2015 = tm_map(Corpus_sko2015, content_transformer(gsub), pattern = "[[:punct:]]", replacement = " ")
-Corpus_uza2014 = tm_map(Corpus_uza2014, content_transformer(gsub), pattern = "[[:punct:]]", replacement = " ")
-Corpus_uza2015 = tm_map(Corpus_uza2015, content_transformer(gsub), pattern = "[[:punct:]]", replacement = " ")
-
 Corpus_sko2014 = tm_map(Corpus_sko2014, content_transformer(stri_trans_general), "latin-ascii")
 Corpus_sko2015 = tm_map(Corpus_sko2015, content_transformer(stri_trans_general), "latin-ascii")
 Corpus_uza2014 = tm_map(Corpus_uza2014, content_transformer(stri_trans_general), "latin-ascii")
 Corpus_uza2015 = tm_map(Corpus_uza2015, content_transformer(stri_trans_general), "latin-ascii")
+
+Corpus_sko2014 = tm_map(Corpus_sko2014, content_transformer(gsub), pattern = "[[:punct:]]", replacement = " ")
+Corpus_sko2015 = tm_map(Corpus_sko2015, content_transformer(gsub), pattern = "[[:punct:]]", replacement = " ")
+Corpus_uza2014 = tm_map(Corpus_uza2014, content_transformer(gsub), pattern = "[[:punct:]]", replacement = " ")
+Corpus_uza2015 = tm_map(Corpus_uza2015, content_transformer(gsub), pattern = "[[:punct:]]", replacement = " ")
 
 Corpus_sko2014 = tm_map(Corpus_sko2014, removeWords, stopwords)
 Corpus_sko2015 = tm_map(Corpus_sko2015, removeWords, stopwords)
@@ -193,5 +193,3 @@ rm(uza2015_lematyzacja)
 #DTM_uza2014 = removeSparseTerms(DTM_uza2014, sparse = 0.99)
 
 #Uwagi ogólne - można uprościć ten kod poprzez wektoryzację (funcja Vectorize), póki co jest jednak wystarczająco czytelny
-
-
