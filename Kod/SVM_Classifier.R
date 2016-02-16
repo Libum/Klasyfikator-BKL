@@ -25,4 +25,4 @@ train_Good = subset(train, Wynik==TRUE)
 train_independent = subset(train_Good, select = -Wynik)
 train_dependent = subset(train_Good, select = Wynik)
 
-model = svm(x = train_independent, y = train_dependent, type = "one-classification", nu = 0.2, cross = 5, kernel = "linear")
+model = svm(x = train_independent, y = train_dependent, type = "one-classification", nu = 0.5, cross = 5)

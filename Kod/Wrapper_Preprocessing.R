@@ -1,5 +1,5 @@
 #Ogólna funkcja "zbiorcza" do preprocessingu - do późniejszego użycia, domyśle nie usuwa najczętszych wyrazów
-#i nie przeprowadza lematyzacji
+#i nie przeprowadza lematyzacji, jako input bierze wektor tekstowy z surowymi zdaniami
 
 Preprocess = function(text, lemmat = FALSE, stopWords = FALSE, tolower = TRUE, removeNumbers = TRUE,
                       punctuation = TRUE, ASCII = TRUE, stripWhite = TRUE){
