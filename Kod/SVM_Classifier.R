@@ -16,6 +16,7 @@ DTM_sko2014 = DocumentTermMatrix(Corpus_sko2014, control = list(tokenize = Bigra
 DTM_sko2014 = as.matrix(DTM_sko2014)
 DTM_sko2014 = as.data.frame(DTM_sko2014)
 DTM_sko2014$Wynik = x$Wynik
+colnames(DTM_sko2014) = make.names(colnames(DTM_sko2014))
 
 index = sample.split(DTM_sko2014$Wynik, SplitRatio = 0.7)
 train = DTM_sko2014[index==TRUE,]
@@ -25,4 +26,4 @@ train_Good = subset(train, Wynik==TRUE)
 train_independent = subset(train_Good, select = -Wynik)
 train_dependent = subset(train_Good, select = Wynik)
 
-model = svm(x = train_independent, y = train_dependent, type = "one-classification", nu = 0.5, cross = 5)
+modelSVM = svm(Wynik~., data = train, probability = TRUE, gamma = 0.01923077)

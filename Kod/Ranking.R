@@ -43,7 +43,7 @@ write_results = function(final_rank){
         result
 }
 
-final_ranking = function(data, kategoria, marka){
+final_ranking = function(data, kategoria, marka, ...){
         if (length(kategoria) != length(marka)){
                 stop("Liczba kategorii i marek nie jest równa")
         }
