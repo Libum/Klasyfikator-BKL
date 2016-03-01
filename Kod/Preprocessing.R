@@ -26,10 +26,10 @@ names(wulgaryzmy) = wulgaryzmy
 
 library(tm)
 
-Corpus_sko2014 = Corpus(VectorSource(x = sko2014$Skojarzenie))
-Corpus_sko2015 = Corpus(VectorSource(x = sko2015$skojarzenie))
-Corpus_uza2014 = Corpus(VectorSource(x = uza2014$Uzasadnienie))
-Corpus_uza2015 = Corpus(VectorSource(x = uza2015$uzasadnienie))
+Corpus_sko2014 = Corpus(VectorSource(x = sko2014$Zdanie))
+Corpus_sko2015 = Corpus(VectorSource(x = sko2015$Zdanie))
+Corpus_uza2014 = Corpus(VectorSource(x = uza2014$Zdanie))
+Corpus_uza2015 = Corpus(VectorSource(x = uza2015$Zdanie))
 
 Corpus_sko2014 = tm_map(Corpus_sko2014, content_transformer(tolower))
 Corpus_sko2015 = tm_map(Corpus_sko2015, content_transformer(tolower))
@@ -86,6 +86,7 @@ insert_lemats = function(sentence){
         final_sentence = character()
         sentence = strsplit(x = sentence, split = " ")
         flag = FALSE
+        min_one_lem = FALSE
         for(word in sentence[[1]]){
                 lemat = lematy[[word]]
                 test = as.vector(is.null(lemat))
@@ -95,13 +96,14 @@ insert_lemats = function(sentence){
                         }
                 else{
                         final_sentence = paste(final_sentence, lemat)
+                        min_one_lem = TRUE
                         }
         }
         result = substr(x = final_sentence, start = 2, stop = nchar(final_sentence))
         if (length(result)==0){
                 result = ""
         }
-        return(c(result,flag))
+        return(c(result, flag, min_one_lem))
 }
 
 
@@ -110,13 +112,15 @@ lemmatize = function(corpus){
         index = seq(1, length(text), by = 1)
         result = vector(length = max(index))
         flags = vector(length = max(index))
+        min_one_lems = vector(length = max(index))
         for (i in index) { 
                 sentence = text[[i]]
                 final = insert_lemats(sentence)
                 result[i] = final[1]
                 flags[i] = final[2]
+                min_one_lems[i] = final[3]
         }
-        df = data.frame(Lematy = result, Flaga = as.logical(flags))
+        df = data.frame(Lematy = result, Flaga = as.logical(flags), Min_One_Lem = as.logical(min_one_lems))
         return(df)
 }
 
@@ -168,6 +172,11 @@ sko2014$Flaga = sko2014_lematyzacja$Flaga
 sko2015$Flaga = sko2015_lematyzacja$Flaga
 uza2014$Flaga = uza2014_lematyzacja$Flaga
 uza2015$Flaga = uza2015_lematyzacja$Flaga
+
+sko2014$Min_One_Lem = sko2014_lematyzacja$Min_One_Lem
+sko2015$Min_One_Lem = sko2015_lematyzacja$Min_One_Lem
+uza2014$Min_One_Lem = uza2014_lematyzacja$Min_One_Lem
+uza2015$Min_One_Lem = uza2015_lematyzacja$Min_One_Lem
 
 sko2014$Tagi = sapply(X = extract_text(Corpus_sko2014), FUN = insert_tags)
 sko2015$Tagi = sapply(X = extract_text(Corpus_sko2015), FUN = insert_tags)
