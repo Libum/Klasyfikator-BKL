@@ -4,9 +4,11 @@ library(caret)
 library(tm)
 library(RWeka)
 
-x = subset(sko2014, Vulg == FALSE)
+x = subset(uza2014, Vulg == FALSE)
 index_long_flag = ifelse(x$Long==TRUE & x$Flaga==TRUE, FALSE, TRUE)
 x = subset(x, index_long_flag == TRUE)
+x = subset(x, (x$Lematy == "")==FALSE)
+x = subset(x, Min_One_Lem == TRUE)
 rm(index_long_flag)
 
 Corpus_sko2014 = Corpus(VectorSource(x$Tagi))
