@@ -63,11 +63,15 @@ test$Wynik = as.factor(test$Wynik)
 #Budowa modelu
 
 library(glmnet)
-model = cv.glmnet(y = train[,ncol(train)], x = as.matrix(train[,-ncol(train)]), family="binomial", nfolds = 10)
-test = test[,intersect(names(train), names(test))]
-pred = predict.cv.glmnet(model, newx = as.matrix(test[, -ncol(test)]), type = "response")
+
+train_both = train_both[,intersect(names(train_both), names(test_both))]
+test_both = test_both[,intersect(names(train_both), names(test_both))]
+
+model = cv.glmnet(y = train_both[,ncol(train_both)], x = as.matrix(train_both[,-ncol(train_both)]), family="binomial", nfolds = 10)
+pred = predict.cv.glmnet(model, newx = as.matrix(test_both[, -ncol(test_both)]), type = "response")
 
 library(ROCR)
-ROCRpred = prediction(predictions = pred, labels = test_uza$Wynik)
+ROCRpred = prediction(predictions = pred, labels = test_both$Wynik)
 ROCRperf = performance(ROCRpred, "tpr", "fpr")
 plot(ROCRperf, colorize = TRUE, main = "Lasso on uza test")
+performance(ROCRpred, "auc")@y.values

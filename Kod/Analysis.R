@@ -47,3 +47,26 @@ sko2014$Vulg = sapply(sko2014$Lematy, identify_vulg)
 sko2015$Vulg = sapply(sko2015$Lematy, identify_vulg)
 uza2014$Vulg = sapply(uza2014$Lematy, identify_vulg)
 uza2015$Vulg = sapply(uza2015$Lematy, identify_vulg)
+
+#Funkcja check_brand, sprawdzająca, czy w tekście dotyczącym danej marki występuje jej nazwa (lub jej fragment,
+#przynajmniej dwuliterowy).
+
+check_brand = function(sentences, brands){
+        library(stringr)
+        library(tm)
+        is_brand = logical(length = length(sentences))
+        brands = as.character(brands)
+        brands = str_replace_all(string = brands, pattern = "[[:punct:]]", replacement = "")
+        brands = stripWhitespace(brands)
+        for (i in 1:length(sentences)){
+                if ((brands[i] != "") & (sentences[i] != "")){
+                        brand_words = strsplit(x = brands[i], split = " ")[[1]]
+                        for (j in 1:length(brand_words)){
+                                if ((nchar(brand_words[j]) > 2) & (grepl(pattern = brand_words[j], x = sentences[i]))){
+                                        is_brand[i] = TRUE
+                                }
+                        }
+                }
+        }
+        is_brand
+}
