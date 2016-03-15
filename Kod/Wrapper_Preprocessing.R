@@ -27,6 +27,7 @@ Preprocess = function(text, lemmat = FALSE, stopWords = FALSE, tolower = TRUE, r
                 final_sentence = character()
                 sentence = strsplit(x = sentence, split = " ")
                 flag = FALSE
+                min_one_lem = FALSE
                 for(word in sentence[[1]]){
                         lemat = lematy[[word]]
                         test = as.vector(is.null(lemat))
@@ -36,13 +37,14 @@ Preprocess = function(text, lemmat = FALSE, stopWords = FALSE, tolower = TRUE, r
                         }
                         else{
                                 final_sentence = paste(final_sentence, lemat)
+                                min_one_lem = TRUE
                         }
                 }
                 result = substr(x = final_sentence, start = 2, stop = nchar(final_sentence))
                 if (length(result)==0){
                         result = ""
                 }
-                return(c(result,flag))
+                return(c(result, flag, min_one_lem))
         }
         
         
@@ -51,13 +53,15 @@ Preprocess = function(text, lemmat = FALSE, stopWords = FALSE, tolower = TRUE, r
                 index = seq(1, length(text), by = 1)
                 result = vector(length = max(index))
                 flags = vector(length = max(index))
+                min_one_lems = vector(length = max(index))
                 for (i in index) { 
                         sentence = text[[i]]
                         final = insert_lemats(sentence)
                         result[i] = final[1]
                         flags[i] = final[2]
+                        min_one_lems[i] = final[3]
                 }
-                df = data.frame(Lematy = result, Flaga = as.logical(flags))
+                df = data.frame(Lematy = result, Flaga = as.logical(flags), Min_One_Lem = as.logical(min_one_lems))
                 return(df)
         }
 
@@ -72,10 +76,7 @@ Preprocess = function(text, lemmat = FALSE, stopWords = FALSE, tolower = TRUE, r
 
         if (lemmat == TRUE){
                 text = lemmatize(text)
-                text = text$Lematy
-                flagi = text$Flaga
-                text = as.character(text)
-                return(data.frame(Lematy = text, Flagi = flagi))
+                return(text)
         }
         extract_text(text)
 }

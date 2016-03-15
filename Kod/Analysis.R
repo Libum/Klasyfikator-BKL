@@ -36,7 +36,7 @@ identify_vulg = function(sentence){
         vulgar
 }
 
-#Dodanie do baz danych identyfikatorów wspomnianych ciągów długich i bezsensownych (identify_long) i wulgarnych (identify_vulg)
+#Dodanie do baz danych identyfikatorów wspomnianych ciągów (identify_long) i wulgarnych (identify_vulg)
 
 sko2014$Long = sapply(sko2014$Lematy, identify_long)
 sko2015$Long = sapply(sko2015$Lematy, identify_long)
@@ -70,3 +70,8 @@ check_brand = function(sentences, brands){
         }
         is_brand
 }
+
+#Identyfikacja ciągów zawierających wyrażenia "nie wiem", "nie znam", "nie korzystam" itd.
+
+#uza2016$Nie_wiem = grepl(pattern = "(nie znam)|(nie korzystam)|(nie używam)|(nie uzywam)|(nie kupuje)", 
+#                          x = uza2016$Zdanie)
